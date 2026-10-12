@@ -26,3 +26,7 @@ GitHub Actions يشغّل `gradle assembleDebug` على فروع التطوير 
 - آلية التحديث تقرأ `update.json` من مستودع `abw3laa/monabeh-basma-updtates`، ويحتوي الملف على رقم الإصدار ورابط تنزيل APK المباشر من MediaFire. بعد رفع APK، حدّث `versionCode` و`versionName` و`downloadUrl` و`releaseNotes` في الملف. يجب أن يكون الرابط رابط تنزيل مباشر عبر HTTPS لا صفحة MediaFire فقط. لا يتم تثبيت أي تحديث بصمت؛ يطلب Android موافقة المستخدم.
 - ملفات التصميم المصدرية من Stitch محفوظة في ملف ZIP المرفق بالمحادثة، وهي مراجع واجهات وليست مشروع Android جاهزًا.
 - لا تُحفظ مفاتيح التوقيع أو كلمات المرور أو رموز الوصول داخل المستودع.
+
+
+## الإصدارات الموقعة
+راجع [docs/RELEASE.md](docs/RELEASE.md) لإعداد أسرار توقيع Android، وإنشاء APK موقّع، ورفع التحديث إلى MediaFire وتحديث ملف `update.json`.
