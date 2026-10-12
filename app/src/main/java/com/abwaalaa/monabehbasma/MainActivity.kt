@@ -313,8 +313,6 @@ class MainActivity : Activity() {
                         val asset = assets.optJSONObject(i) ?: continue
                         if (asset.optString("name").endsWith(".apk", true)) { apkUrl = asset.optString("browser_download_url"); break }
                     }
-                    val latestCode = Regex("\\d+").find(version)?.value?.toIntOrNull() ?: 0
-                    if (latestCode <= BuildConfig.VERSION_CODE) error = "أنت تستخدم الإصدار الحالي (${BuildConfig.VERSION_NAME})."
                     else if (apkUrl == null) error = "عُثر على إصدار $version، لكن ملف APK غير مرفق به بعد."
                 }
             } catch (_: Exception) { error = "تعذر الوصول إلى GitHub. تحقق من اتصال الإنترنت ثم أعد المحاولة." }
@@ -329,6 +327,19 @@ class MainActivity : Activity() {
                 }
             }
         }.start()
+    }
+
+    private fun isNewerVersion(latest: String, current: String): Boolean {
+        fun parts(value: String) = Regex("[0-9]+").findAll(value).mapNotNull { it.value.toIntOrNull() }.toList()
+        val a = parts(latest)
+        val b = parts(current)
+        if (a.isEmpty()) return false
+        for (i in 0 until maxOf(a.size, b.size)) {
+            val av = a.getOrElse(i) { 0 }
+            val bv = b.getOrElse(i) { 0 }
+            if (av != bv) return av > bv
+        }
+        return false
     }
 
     private fun beginUpdate(url: String) {
