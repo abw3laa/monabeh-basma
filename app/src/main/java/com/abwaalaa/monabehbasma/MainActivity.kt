@@ -10,6 +10,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.graphics.drawable.GradientDrawable
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
@@ -420,7 +421,7 @@ class MainActivity : Activity() {
             orientation = LinearLayout.VERTICAL
             layoutDirection = View.LAYOUT_DIRECTION_RTL
             setPadding(dp(18), dp(18), dp(18), dp(18))
-            setBackgroundColor(color)
+            background = GradientDrawable().apply { setColor(color); cornerRadius = dp(20).toFloat(); setStroke(dp(1), if (color == navy) 0xFF19364C.toInt() else 0xFFE2E8F0.toInt()) }
             content()
         }
         parent.addView(box, LinearLayout.LayoutParams(-1, LinearLayout.LayoutParams.WRAP_CONTENT))
@@ -436,7 +437,7 @@ class MainActivity : Activity() {
 
     private fun button(parent: LinearLayout, text: String, color: Int, action: () -> Unit) {
         parent.addView(Button(this).apply {
-            this.text = text; setTextColor(0xFFFFFFFF.toInt()); setBackgroundColor(color); isAllCaps = false
+            this.text = text; setTextColor(0xFFFFFFFF.toInt()); background = GradientDrawable().apply { setColor(color); cornerRadius = dp(14).toFloat() }; isAllCaps = false
             setOnClickListener { action() }
         }, LinearLayout.LayoutParams(-1, LinearLayout.LayoutParams.WRAP_CONTENT))
     }
