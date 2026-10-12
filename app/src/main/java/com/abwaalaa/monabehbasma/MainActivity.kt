@@ -104,7 +104,7 @@ class MainActivity : Activity() {
             val label = "تذكير"
             scheduleReminder(id, label, whenToFire.timeInMillis)
             val current = prefs.getStringSet("items", emptySet())!!.toMutableSet()
-            current.add("\${id}|\${label}|\${whenToFire.timeInMillis}")
+            current.add("${id}|${label}|${whenToFire.timeInMillis}")
             prefs.edit().putStringSet("items", current).apply()
             renderReminders()
             Toast.makeText(this, "تمت إضافة التذكير", Toast.LENGTH_SHORT).show()
@@ -162,7 +162,7 @@ class MainActivity : Activity() {
                         PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
                     (getSystemService(ALARM_SERVICE) as AlarmManager).cancel(pending)
                     val updated = prefs.getStringSet("items", emptySet()).orEmpty()
-                        .filterNot { it.startsWith("\${id}|") }.toSet()
+                        .filterNot { it.startsWith("${id}|") }.toSet()
                     prefs.edit().putStringSet("items", updated).apply()
                     renderReminders()
                 }
