@@ -2,7 +2,7 @@ name: Android CI
 
 on:
   push:
-    branches: [main, "task/**", "task1/**", "task2/**"]
+    branches: [main, "task/**", "task1/**", "task2/**", "task3/**"]
   pull_request:
     branches: [main]
 
