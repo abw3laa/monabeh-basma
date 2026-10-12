@@ -3,11 +3,12 @@ plugins {
     id("org.jetbrains.kotlin.android")
 }
 android {
-    namespace = "com.abw3laa.monabehbasma"
+    buildFeatures { buildConfig = true }
+    namespace = "com.abwaalaa.monabehbasma"
     compileSdk = 35
     defaultConfig {
-        applicationId = "com.abw3laa.monabehbasma"
-        minSdk = 26
+        applicationId = "com.abwaalaa.monabehbasma"
+        minSdk = 30
         targetSdk = 35
         versionCode = 1
         versionName = "1.0.0"
