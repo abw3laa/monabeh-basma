@@ -280,7 +280,7 @@ class MainActivity : Activity() {
                 ReminderScheduler.cancel(this, p)
                 AppointmentStore.replace(this, p.copy(completed = true, completedAt = System.currentTimeMillis()))
                 val next = Calendar.getInstance().apply { timeInMillis = p.dateMillis; add(Calendar.DAY_OF_YEAR, p.recurrenceDays) }
-                while (next.timeInMillis < startOfDay(System.currentTimeMillis())) next.add(Calendar.DAY_OF_YEAR, p.recurrenceDays)
+                while (next.timeInMillis <= System.currentTimeMillis()) next.add(Calendar.DAY_OF_YEAR, p.recurrenceDays)
                 val nextAppointment = Appointment(System.currentTimeMillis() + 1, next.timeInMillis, p.recurrenceDays)
                 AppointmentStore.add(this, nextAppointment)
                 ReminderScheduler.schedule(this, nextAppointment)
