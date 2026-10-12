@@ -4,10 +4,10 @@ plugins {
 }
 android {
     buildFeatures { buildConfig = true }
-    namespace = "com.abw3laa.monabehbasma"
+    namespace = "com.abwaalaa.monabehbasma"
     compileSdk = 35
     defaultConfig {
-        applicationId = "com.abw3laa.monabehbasma"
+        applicationId = "com.abwaalaa.monabehbasma"
         minSdk = 26
         targetSdk = 35
         versionCode = 1
