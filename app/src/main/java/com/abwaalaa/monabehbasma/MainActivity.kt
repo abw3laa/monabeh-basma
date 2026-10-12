@@ -150,7 +150,7 @@ class MainActivity : Activity() {
                 setBackgroundColor(0xFFFFFFFF.toInt())
             }
             row.addView(TextView(this).apply {
-                text = "$" + "title\n" + SimpleDateFormat("EEE، hh:mm a", Locale("ar")).format(Date(time))
+                text = "${title}\n" + SimpleDateFormat("EEE، hh:mm a", Locale("ar")).format(Date(time))
                 textSize = 16f
                 setTextColor(0xFF123D35.toInt())
             }, LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f))
