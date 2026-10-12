@@ -200,6 +200,13 @@ class MainActivity : Activity() {
             catch (_: Exception) { toast("افتح إعدادات التطبيق من إعدادات الهاتف.") }
         }
         space(body, 8)
+        button(body, "إعدادات دقة مواعيد التنبيه", navy) {
+            if (Build.VERSION.SDK_INT >= 31) {
+                try { startActivity(Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM, Uri.parse("package:$packageName"))) }
+                catch (_: Exception) { toast("تحقق من أذونات المنبهات في إعدادات أندرويد.") }
+            } else toast("هذا الإصدار من أندرويد لا يتطلب هذا الإذن الخاص.")
+        }
+        space(body, 8)
         button(body, "السماح بتثبيت التحديثات من هذا التطبيق", navy) {
             if (Build.VERSION.SDK_INT >= 26) {
                 try { startActivity(Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES, Uri.parse("package:$packageName"))) }
