@@ -305,37 +305,43 @@ class MainActivity : Activity() {
             var notes = ""
             var apkUrl: String? = null
             try {
-                val connection = (URL("https://api.github.com/repos/abw3laa/monabeh-basma/releases/latest").openConnection() as HttpURLConnection).apply {
-                    connectTimeout = 10000; readTimeout = 10000
-                    setRequestProperty("Accept", "application/vnd.github+json")
-                    setRequestProperty("X-GitHub-Api-Version", "2022-11-28")
+                val manifestUrl = "https://raw.githubusercontent.com/abw3laa/monabeh-basma-updtates/main/update.json"
+                val connection = (URL(manifestUrl).openConnection() as HttpURLConnection).apply {
+                    connectTimeout = 10000
+                    readTimeout = 10000
+                    setRequestProperty("Cache-Control", "no-cache")
                 }
-                if (connection.responseCode == 404) error = "لا يوجد إصدار منشور بعد. سيتم إتاحة التحديثات بعد نشر أول نسخة Release."
-                else if (connection.responseCode !in 200..299) error = "تعذر الاتصال بخدمة الإصدارات (HTTP ${connection.responseCode})."
-                else {
+                if (connection.responseCode !in 200..299) {
+                    error = if (connection.responseCode == 404) {
+                        "مستودع التحديثات لم يُجهّز بعد أو لم يُنشر ملف update.json."
+                    } else {
+                        "تعذر الاتصال بمستودع التحديثات (HTTP ${connection.responseCode})."
+                    }
+                } else {
                     val data = JSONObject(connection.inputStream.bufferedReader().use { it.readText() })
-                    version = data.optString("tag_name", "")
-                    notes = data.optString("body", "لا توجد ملاحظات للإصدار.")
-                    val assets = data.optJSONArray("assets")
-                    if (assets != null) {
-                        for (i in 0 until assets.length()) {
-                            val asset = assets.optJSONObject(i) ?: continue
-                            if (asset.optString("name").endsWith(".apk", true)) {
-                                apkUrl = asset.optString("browser_download_url")
-                                break
-                            }
-                        }
-                    }
-                    if (!isNewerVersion(version, BuildConfig.VERSION_NAME)) {
-                        error = "أنت تستخدم الإصدار الحالي (${BuildConfig.VERSION_NAME})."
+                    val latestCode = data.optInt("versionCode", 0)
+                    version = data.optString("versionName", "")
+                    notes = data.optString("releaseNotes", "لا توجد ملاحظات للإصدار.")
+                    apkUrl = data.optString("downloadUrl", "").trim().takeIf { it.isNotBlank() }
+                    if (latestCode <= 0 || version.isBlank()) {
+                        error = "ملف التحديث update.json غير مكتمل أو يحتوي على إصدار غير صالح."
+                    } else if (latestCode <= BuildConfig.VERSION_CODE) {
+                        error = "أنت تستخدم أحدث إصدار (${BuildConfig.VERSION_NAME})."
                     } else if (apkUrl == null) {
-                        error = "عُثر على إصدار $version، لكن ملف APK غير مرفق به بعد."
+                        error = "يتوفر الإصدار $version، لكن رابط MediaFire لم يُضف بعد إلى مستودع التحديثات."
+                    } else if (!apkUrl!!.startsWith("https://")) {
+                        error = "رابط التحديث غير آمن أو غير صالح. يجب أن يبدأ بـ https://"
+                        apkUrl = null
                     }
                 }
-            } catch (_: Exception) { error = "تعذر الوصول إلى GitHub. تحقق من اتصال الإنترنت ثم أعد المحاولة." }
+                connection.disconnect()
+            } catch (_: Exception) {
+                error = "تعذر الوصول إلى مستودع التحديثات. تحقق من اتصال الإنترنت ثم أعد المحاولة."
+            }
             runOnUiThread {
                 if (error != null) {
-                    AlertDialog.Builder(this).setTitle("تحديثات التطبيق").setMessage(error).setPositiveButton("حسنًا", null).show()
+                    AlertDialog.Builder(this).setTitle("تحديثات التطبيق").setMessage(error)
+                        .setPositiveButton("حسنًا", null).show()
                 } else {
                     AlertDialog.Builder(this).setTitle("يتوفر تحديث $version")
                         .setMessage(notes.take(1200).ifBlank { "يتوفر إصدار جديد من التطبيق." })
@@ -376,7 +382,7 @@ class MainActivity : Activity() {
         try {
             val request = DownloadManager.Request(Uri.parse(url))
                 .setTitle("تحديث منبّه البصمة")
-                .setDescription("تنزيل ملف التحديث من GitHub Releases")
+                .setDescription("تنزيل تحديث من مستودع منبّه البصمة")
                 .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
                 .setDestinationInExternalFilesDir(this, Environment.DIRECTORY_DOWNLOADS, "monabeh-basma-update.apk")
             activeDownloadId = (getSystemService(DOWNLOAD_SERVICE) as DownloadManager).enqueue(request)
