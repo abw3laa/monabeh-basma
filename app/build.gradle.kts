@@ -3,6 +3,7 @@ plugins {
     id("org.jetbrains.kotlin.android")
 }
 android {
+    buildFeatures { buildConfig = true }
     namespace = "com.abw3laa.monabehbasma"
     compileSdk = 35
     defaultConfig {
