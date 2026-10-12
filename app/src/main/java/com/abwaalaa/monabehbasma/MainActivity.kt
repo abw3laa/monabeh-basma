@@ -309,11 +309,20 @@ class MainActivity : Activity() {
                     version = data.optString("tag_name", "")
                     notes = data.optString("body", "لا توجد ملاحظات للإصدار.")
                     val assets = data.optJSONArray("assets")
-                    if (assets != null) for (i in 0 until assets.length()) {
-                        val asset = assets.optJSONObject(i) ?: continue
-                        if (asset.optString("name").endsWith(".apk", true)) { apkUrl = asset.optString("browser_download_url"); break }
+                    if (assets != null) {
+                        for (i in 0 until assets.length()) {
+                            val asset = assets.optJSONObject(i) ?: continue
+                            if (asset.optString("name").endsWith(".apk", true)) {
+                                apkUrl = asset.optString("browser_download_url")
+                                break
+                            }
+                        }
                     }
-                    else if (apkUrl == null) error = "عُثر على إصدار $version، لكن ملف APK غير مرفق به بعد."
+                    if (!isNewerVersion(version, BuildConfig.VERSION_NAME)) {
+                        error = "أنت تستخدم الإصدار الحالي (${BuildConfig.VERSION_NAME})."
+                    } else if (apkUrl == null) {
+                        error = "عُثر على إصدار $version، لكن ملف APK غير مرفق به بعد."
+                    }
                 }
             } catch (_: Exception) { error = "تعذر الوصول إلى GitHub. تحقق من اتصال الإنترنت ثم أعد المحاولة." }
             runOnUiThread {
