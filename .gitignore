@@ -1,8 +1,22 @@
+# Web & Node ignores
 node_modules/
-build/
 dist/
 coverage/
-.DS_Store
 *.log
 .env*
 !.env.example
+
+# Android & Gradle ignores
+*.iml
+.gradle/
+.idea/
+local.properties
+.DS_Store
+build/
+**/build/
+captures/
+.externalNativeBuild/
+.cxx/
+*.jks
+*.keystore
+secrets.properties
