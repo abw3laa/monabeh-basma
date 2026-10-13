@@ -245,7 +245,7 @@ class AlarmActivity : Activity() {
             setLineSpacing(dp(2).toFloat(), 1f)
         }, matchWrap())
 
-        scroll.addView(hero, ScrollView.LayoutParams(-1, -2))
+        scroll.addView(hero, android.view.ViewGroup.LayoutParams(-1, -2))
         outer.addView(scroll, LinearLayout.LayoutParams(-1, -1))
         setContentView(outer)
     }
