@@ -1,0 +1,6 @@
+{
+  "name": "منبّه بصمة - Fingerprint Reminder",
+  "description": "تطبيق إدارة ومتابعة مواعيد وتنبيهات البصمة الدورية كل 28 يوماً مع نظام مهلة الـ 3 أيام وتنبيهات الأولوية القصوى.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
