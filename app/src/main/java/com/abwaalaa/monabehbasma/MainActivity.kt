@@ -187,14 +187,23 @@ class MainActivity : Activity() {
         }
         val chips = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL; layoutDirection = View.LAYOUT_DIRECTION_RTL }
         val upcomingChip = TextView(this).apply {
-            text = if (upcoming == null) "● لا يوجد موعد" else "● موعد اليوم / قادم"
+            text = when {
+                upcoming == null -> "● لا يوجد موعد"
+                startOfDay(upcoming.dateMillis) < now -> "● موعد سابق / متأخر"
+                startOfDay(upcoming.dateMillis) == now -> "● موعد اليوم"
+                else -> "● موعد قادم"
+            }
             textSize = 11f; setTextColor(0xFFFFFFFF.toInt()); gravity = Gravity.CENTER
             setPadding(dp(10), dp(7), dp(10), dp(7))
             background = GradientDrawable().apply { setColor(0xFF006A61.toInt()); cornerRadius = dp(24).toFloat() }
         }
         chips.addView(upcomingChip)
         val recurrenceChip = TextView(this).apply {
-            text = "يتكرر كل ٢٨ يومًا  ⟳"
+            text = when (upcoming?.recurrenceDays) {
+                7 -> "يتكرر أسبوعيًا  ⟳"
+                28 -> "يتكرر كل ٢٨ يومًا  ⟳"
+                else -> "دون تكرار محدد  ⟳"
+            }
             textSize = 11f; setTextColor(0xFFFFFFFF.toInt()); gravity = Gravity.CENTER
             setPadding(dp(10), dp(7), dp(10), dp(7))
             background = GradientDrawable().apply { setColor(0xFF263E4F.toInt()); cornerRadius = dp(24).toFloat() }
