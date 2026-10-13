@@ -1,2 +1,92 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources><string name="app_name">منبّه البصمة</string></resources>
+<resources>
+    <string name="app_name">منبّه بصمة</string>
+    <string name="nav_home">الرئيسية</string>
+    <string name="nav_appointments">المواعيد</string>
+    <string name="nav_history">السجل</string>
+    <string name="nav_settings">الإعدادات</string>
+
+    <!-- Home Screen -->
+    <string name="home_smart_alarm_secured">المنبه الذكي نشط ومؤمّن</string>
+    <string name="home_smart_alarm_sub">تم ضبط تنبيهات مهلة الأيام الثلاثة بدقة</string>
+    <string name="home_add_appointment">تسجيل بصمة جديدة</string>
+    <string name="home_next_appointment_title">موعد البصمة التالي المقرر</string>
+    <string name="home_status_soon">قريباً</string>
+    <string name="home_status_scheduled">مجدول</string>
+    <string name="home_days_remaining">متبقي %1$d أيام</string>
+    <string name="home_allowed_days">الأيام المسموحة</string>
+    <string name="home_day_1_label">اليوم 1</string>
+    <string name="home_day_1_badge">الأساسي</string>
+    <string name="home_day_2_label">اليوم 2</string>
+    <string name="home_day_2_badge">تذكير</string>
+    <string name="home_day_3_label">اليوم 3</string>
+    <string name="home_day_3_badge">الفرصة الأخيرة</string>
+    <string name="home_confirm_biometric">تأكيد البصمة</string>
+    <string name="home_confirm_success">تم تأكيد البصمة بنجاح وجدولة الدورة القادمة!</string>
+
+    <!-- Schedule Screen -->
+    <string name="schedule_title">سجل المواعيد</string>
+    <string name="schedule_subtitle">سجل مواعيد البصمة</string>
+    <string name="schedule_subtitle_desc">متابعة تواريخ البصمات الدورية السابقة والمقبلة</string>
+    <string name="schedule_tab_upcoming">البصمات القادمة</string>
+    <string name="schedule_tab_past">البصمات السابقة</string>
+    <string name="schedule_grace_period">مهلة السماح (3 أيام):</string>
+
+    <!-- History Screen -->
+    <string name="history_title">سجل التبصيم</string>
+    <string name="history_compliance_rate">نسبة الالتزام</string>
+    <string name="history_completed_cycles">الدورات المكتملة</string>
+    <string name="history_status_success">ناجحة وفي الموعد</string>
+
+    <!-- Settings Screen -->
+    <string name="settings_title">الإعدادات</string>
+    <string name="settings_lang_title">اللغة</string>
+    <string name="settings_lang_sub">تحديد لغة واجهة التطبيق</string>
+    <string name="settings_theme_title">المظهر</string>
+    <string name="settings_theme_sub">التبديل بين الوضع الفاتح والداكن</string>
+    <string name="settings_theme_dark">داكن</string>
+    <string name="settings_theme_light">فاتح</string>
+    <string name="settings_alarm_title">إعدادات التنبيه</string>
+    <string name="settings_alarm_sub">الصوت، الاهتزاز، الغفوة، ومهلة التص...</string>
+    <string name="settings_perms_title">الأذونات والإشعارات</string>
+    <string name="settings_perms_sub">الظهور فوق الشاشة، الإشعارات، والبطارية</string>
+    <string name="settings_about_app_title">حول التطبيق</string>
+    <string name="settings_about_app_sub">الإصدار وتفاصيل منظومة الحماية</string>
+    <string name="settings_about_dev_title">حول المطور</string>
+    <string name="settings_about_dev_sub">فريق تطوير الأنظمة والاتصال</string>
+    <string name="settings_disclaimer_title">إخلاء المسؤولية</string>
+    <string name="settings_disclaimer_sub">الشروط، الأحكام، وتنبيهات الاستخدام</string>
+    <string name="settings_perms_dock_bar">الأذونات وتفادى الإغلاق</string>
+
+    <!-- Permissions Dialog -->
+    <string name="perm_overlay_title">الظهور فوق التطبيقات</string>
+    <string name="perm_overlay_desc">لعرض نافذة الإنذار الفورية حتى أثناء القفل</string>
+    <string name="perm_notif_title">الإشعارات المهمة</string>
+    <string name="perm_notif_desc">تخطي نمط عدم الإزعاج أثناء مهلة البصمة</string>
+    <string name="perm_battery_title">استثناء توفير البطارية</string>
+    <string name="perm_battery_desc">منع نظام التشغيل من قتل تطبيق التنبيه</string>
+    <string name="perm_btn_enable">تفعيل</string>
+    <string name="perm_btn_enabled">مُفعّل</string>
+
+    <!-- Developer Dialog -->
+    <string name="dev_name">تم البرمجة والتطوير من قبل ياسر أبو علاء</string>
+    <string name="dev_role">مختص ببرمجة التطبيقات والمواقع الإلكترونية</string>
+    <string name="dev_whatsapp">واتساب (WhatsApp)</string>
+    <string name="dev_telegram">تلجرام (Telegram)</string>
+    <string name="dev_facebook">فيسبوك (Facebook)</string>
+
+    <!-- Alarm Activity -->
+    <string name="alarm_active_now">منبه البصمة نشط الآن</string>
+    <string name="alarm_sound_vibrate">صوت + اهتزاز مستمر</string>
+    <string name="alarm_time_arrived">حان موعد البصمة</string>
+    <string name="alarm_btn_done">تمت البصمة</string>
+    <string name="alarm_btn_snooze">ذكرني لاحقاً</string>
+    <string name="alarm_btn_mute">إيقاف الصوت فقط مع إبقاء التذكير على الشاشة</string>
+
+    <!-- Update Dialog -->
+    <string name="update_available_title">يتوفر تحديث جديد للتطبيق</string>
+    <string name="update_available_msg">هل تريد تثبيت التحديث الجديد الآن؟</string>
+    <string name="update_install_now">تثبيت الآن</string>
+    <string name="update_later">لاحقاً</string>
+    <string name="update_permission_msg">يجب تفعيل خيار \"السماح بتثبيت التطبيقات من هذا المصدر\" للمتابعة.</string>
+</resources>

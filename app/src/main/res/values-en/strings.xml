@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Fingerprint Reminder</string>
+    <string name="nav_home">Home</string>
+    <string name="nav_appointments">Schedule</string>
+    <string name="nav_history">History</string>
+    <string name="nav_settings">Settings</string>
+
+    <!-- Home Screen -->
+    <string name="home_smart_alarm_secured">Smart Alarm Active and Secured</string>
+    <string name="home_smart_alarm_sub">3-day grace period alarms accurately set</string>
+    <string name="home_add_appointment">Schedule New Fingerprint</string>
+    <string name="home_next_appointment_title">Next Scheduled Fingerprint Date</string>
+    <string name="home_status_soon">Soon</string>
+    <string name="home_status_scheduled">Scheduled</string>
+    <string name="home_days_remaining">%1$d days left</string>
+    <string name="home_allowed_days">Permitted Days</string>
+    <string name="home_day_1_label">Day 1</string>
+    <string name="home_day_1_badge">Primary</string>
+    <string name="home_day_2_label">Day 2</string>
+    <string name="home_day_2_badge">Reminder</string>
+    <string name="home_day_3_label">Day 3</string>
+    <string name="home_day_3_badge">Last Chance</string>
+    <string name="home_confirm_biometric">Confirm Fingerprint</string>
+    <string name="home_confirm_success">Fingerprint successfully confirmed and next cycle scheduled!</string>
+
+    <!-- Schedule Screen -->
+    <string name="schedule_title">Appointments Schedule</string>
+    <string name="schedule_subtitle">Fingerprint Schedule</string>
+    <string name="schedule_subtitle_desc">Track past and upcoming periodic fingerprint dates</string>
+    <string name="schedule_tab_upcoming">Upcoming</string>
+    <string name="schedule_tab_past">Past Records</string>
+    <string name="schedule_grace_period">Grace Period (3 days):</string>
+
+    <!-- History Screen -->
+    <string name="history_title">Fingerprint History</string>
+    <string name="history_compliance_rate">Compliance Rate</string>
+    <string name="history_completed_cycles">Completed Cycles</string>
+    <string name="history_status_success">Completed On Time</string>
+
+    <!-- Settings Screen -->
+    <string name="settings_title">Settings</string>
+    <string name="settings_lang_title">Language</string>
+    <string name="settings_lang_sub">Choose application language</string>
+    <string name="settings_theme_title">Theme</string>
+    <string name="settings_theme_sub">Toggle light and dark mode</string>
+    <string name="settings_theme_dark">Dark</string>
+    <string name="settings_theme_light">Light</string>
+    <string name="settings_alarm_title">Alarm Settings</string>
+    <string name="settings_alarm_sub">Sound, vibration, snooze, and stage alerts...</string>
+    <string name="settings_perms_title">Permissions and Notifications</string>
+    <string name="settings_perms_sub">Display over lockscreen, priority alerts, battery</string>
+    <string name="settings_about_app_title">About Application</string>
+    <string name="settings_about_app_sub">Version and protection system details</string>
+    <string name="settings_about_dev_title">About Developer</string>
+    <string name="settings_about_dev_sub">Systems development and contact team</string>
+    <string name="settings_disclaimer_title">Disclaimer</string>
+    <string name="settings_disclaimer_sub">Terms, legal conditions, and usage notes</string>
+    <string name="settings_perms_dock_bar">Permissions and Prevent Termination</string>
+
+    <!-- Permissions Dialog -->
+    <string name="perm_overlay_title">Display Over Other Apps</string>
+    <string name="perm_overlay_desc">Show alarm alert window even when screen is locked</string>
+    <string name="perm_notif_title">Critical Notifications</string>
+    <string name="perm_notif_desc">Bypass Do Not Disturb during fingerprint window</string>
+    <string name="perm_battery_title">Battery Optimization Exemption</string>
+    <string name="perm_battery_desc">Prevent OS from killing alarm reminder service</string>
+    <string name="perm_btn_enable">Enable</string>
+    <string name="perm_btn_enabled">Enabled</string>
+
+    <!-- Developer Dialog -->
+    <string name="dev_name">Developed by Yasser Abu Alaa</string>
+    <string name="dev_role">Mobile and Web Application Specialist</string>
+    <string name="dev_whatsapp">WhatsApp</string>
+    <string name="dev_telegram">Telegram</string>
+    <string name="dev_facebook">Facebook</string>
+
+    <!-- Alarm Activity -->
+    <string name="alarm_active_now">Fingerprint Alarm Active Now</string>
+    <string name="alarm_sound_vibrate">Continuous Sound + Vibration</string>
+    <string name="alarm_time_arrived">Fingerprint Due Time</string>
+    <string name="alarm_btn_done">Fingerprint Completed</string>
+    <string name="alarm_btn_snooze">Remind Me Later</string>
+    <string name="alarm_btn_mute">Mute Sound Only, Keep on Screen</string>
+
+    <!-- Update Dialog -->
+    <string name="update_available_title">New Update Available</string>
+    <string name="update_available_msg">Do you want to install the new update now?</string>
+    <string name="update_install_now">Install Now</string>
+    <string name="update_later">Later</string>
+    <string name="update_permission_msg">Please grant \"Install unknown apps from this source\" to proceed.</string>
+</resources>

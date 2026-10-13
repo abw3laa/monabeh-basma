@@ -1,12 +1,23 @@
-# Web & Node ignores
+# Web preview files (local AI Studio only)
 node_modules/
 dist/
 coverage/
 *.log
 .env*
-!.env.example
+src/
+index.html
+metadata.json
+package.json
+package-lock.json
+tsconfig.json
+vite.config.ts
+bun.lock
+public/
+scripts/
+android/
+app_icon.png
 
-# Android & Gradle ignores
+# Android build & local ignores
 *.iml
 .gradle/
 .idea/
