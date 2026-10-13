@@ -121,41 +121,188 @@ class MainActivity : Activity() {
     }
 
     private fun renderHome(body: LinearLayout) {
-        heading(body, "الرئيسية", "منبّه بصمة · نظام المواعيد")
-        val upcoming = AppointmentStore.all(this).filterNot { it.completed }.minByOrNull { it.dateMillis }
         val all = AppointmentStore.all(this)
-        val done = all.count { it.completed }
-        card(body, navy) {
-            label(this, "منبّه البصمة", 24f, 0xFFFFFFFF.toInt(), true)
-            label(this, if (upcoming == null) "لا يوجد موعد قادم مسجل" else "موعد البصمة القادم", 14f, 0xFFB9CBD9.toInt())
-            space(this, 12)
-            label(this, upcoming?.let { dateText(it.dateMillis) } ?: "أضف موعدك الأول للبدء", 22f, 0xFFFFFFFF.toInt(), true)
-            if (upcoming != null) {
-                val days = ((startOfDay(upcoming.dateMillis) - startOfDay(System.currentTimeMillis())) / 86_400_000L).toInt()
-                label(this, when { days < 0 -> "الموعد ضمن نافذة الأيام الثلاثة أو متأخر"; days == 0 -> "الموعد اليوم"; days == 1 -> "متبقٍ يوم واحد"; else -> "متبقٍ $days يومًا" }, 14f, 0xFF89F5E7.toInt())
-                space(this, 12)
-                button(this, "تأكيد إتمام البصمة", teal) { completeAppointment(upcoming) }
+        val now = startOfDay(System.currentTimeMillis())
+        val upcoming = all.filterNot { it.completed }.minByOrNull { it.dateMillis }
+        val completed = all.count { it.completed }
+        val remaining = all.count { !it.completed && it.dateMillis >= now }
+        val today = Calendar.getInstance().get(Calendar.DAY_OF_MONTH)
+        val monthYear = SimpleDateFormat("d MMMM yyyy", Locale("ar")).format(Date())
+
+        // Header follows Stitch screen _24: compact RTL title row and app identity.
+        val top = LinearLayout(this).apply {
+            orientation = LinearLayout.HORIZONTAL
+            gravity = Gravity.CENTER_VERTICAL
+            layoutDirection = View.LAYOUT_DIRECTION_RTL
+            setPadding(dp(2), dp(2), dp(2), dp(12))
+        }
+        val titleColumn = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL; gravity = Gravity.CENTER_VERTICAL }
+        label(titleColumn, "الرئيسية", 25f, ink, true)
+        label(titleColumn, "منبّه بصمة · نظام المواعيد", 12f, muted)
+        top.addView(titleColumn, LinearLayout.LayoutParams(0, -2, 1f))
+        val identity = TextView(this).apply {
+            text = "◉"
+            textSize = 24f
+            gravity = Gravity.CENTER
+            setTextColor(0xFFB91C1C.toInt())
+            background = GradientDrawable().apply { setColor(0xFFFFFFFF.toInt()); shape = GradientDrawable.OVAL }
+        }
+        top.addView(identity, LinearLayout.LayoutParams(dp(42), dp(42)))
+        body.addView(top)
+
+        // Small system-status panel from the Stitch reference.
+        val status = LinearLayout(this).apply {
+            orientation = LinearLayout.HORIZONTAL
+            gravity = Gravity.CENTER_VERTICAL
+            layoutDirection = View.LAYOUT_DIRECTION_RTL
+            setPadding(dp(16), dp(12), dp(16), dp(12))
+            background = GradientDrawable().apply { setColor(0xFFF1F3F5.toInt()); cornerRadius = dp(18).toFloat() }
+        }
+        val statusText = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL; gravity = Gravity.CENTER_VERTICAL }
+        label(statusText, "منبّه بصمة", 20f, ink, true)
+        label(statusText, "لا تفوّت موعد بصمتك القانونية", 12f, muted)
+        status.addView(statusText, LinearLayout.LayoutParams(0, -2, 1f))
+        val active = TextView(this).apply {
+            text = "● النظام نشط"
+            textSize = 11f
+            setTextColor(0xFF006A61.toInt())
+            gravity = Gravity.CENTER
+            setPadding(dp(10), dp(7), dp(10), dp(7))
+            background = GradientDrawable().apply { setColor(0xFF86F2E4.toInt()); cornerRadius = dp(22).toFloat() }
+        }
+        status.addView(active)
+        body.addView(status, LinearLayout.LayoutParams(-1, -2))
+        space(body, 16)
+
+        // Dark appointment hero panel, with the same navy/teal hierarchy as Stitch.
+        val hero = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            layoutDirection = View.LAYOUT_DIRECTION_RTL
+            setPadding(dp(18), dp(18), dp(18), dp(18))
+            background = GradientDrawable().apply {
+                setColor(navy); cornerRadius = dp(18).toFloat()
+                setStroke(dp(1), 0xFF263E4F.toInt())
             }
         }
-        space(body, 14)
-        card(body) {
-            label(this, "ملخص المواعيد", 19f, ink, true)
-            space(this, 10)
-            label(this, "المواعيد المسجلة: ${all.size}", 15f, ink)
-            label(this, "البصمات المكتملة: $done", 15f, teal)
-            label(this, "المواعيد القادمة: ${all.count { !it.completed && it.dateMillis >= startOfDay(System.currentTimeMillis()) }}", 15f, muted)
+        val chips = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL; layoutDirection = View.LAYOUT_DIRECTION_RTL }
+        val upcomingChip = TextView(this).apply {
+            text = if (upcoming == null) "● لا يوجد موعد" else "● موعد اليوم / قادم"
+            textSize = 11f; setTextColor(0xFFFFFFFF.toInt()); gravity = Gravity.CENTER
+            setPadding(dp(10), dp(7), dp(10), dp(7))
+            background = GradientDrawable().apply { setColor(0xFF006A61.toInt()); cornerRadius = dp(24).toFloat() }
         }
-        space(body, 14)
-        button(body, "＋ إضافة موعد بصمة جديد", teal) { createAppointment() }
-        space(body, 8)
-        button(body, "فتح سجل المواعيد", navy) { page = "appointments"; render() }
+        chips.addView(upcomingChip)
+        val recurrenceChip = TextView(this).apply {
+            text = "يتكرر كل ٢٨ يومًا  ⟳"
+            textSize = 11f; setTextColor(0xFFFFFFFF.toInt()); gravity = Gravity.CENTER
+            setPadding(dp(10), dp(7), dp(10), dp(7))
+            background = GradientDrawable().apply { setColor(0xFF263E4F.toInt()); cornerRadius = dp(24).toFloat() }
+        }
+        val chipSpace = View(this)
+        chips.addView(chipSpace, LinearLayout.LayoutParams(dp(6), 1))
+        chips.addView(recurrenceChip)
+        hero.addView(chips)
+        space(hero, 22)
+        label(hero, "موعد البصمة القادم", 13f, 0xFF9FB4C5.toInt())
+        space(hero, 4)
+        label(hero, upcoming?.let { dateText(it.dateMillis) } ?: "أضف موعدك الأول للبدء", 23f, 0xFFFFFFFF.toInt(), true)
+        val days = upcoming?.let { ((startOfDay(it.dateMillis) - now) / 86_400_000L).toInt() }
+        label(hero, when {
+            upcoming == null -> "أنشئ موعدًا لتفعيل التنبيهات"
+            days!! < 0 -> "الموعد بدأ أو مضى · راجع حالة البصمة"
+            days == 0 -> "◷ الموعد اليوم"
+            days == 1 -> "◷ متبقٍ يوم واحد"
+            else -> "◷ متبقٍ $days يومًا"
+        }, 14f, 0xFF86F2E4.toInt())
+        space(hero, 18)
+        val window = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(dp(12), dp(10), dp(12), dp(10))
+            background = GradientDrawable().apply { setColor(0xFF263E4F.toInt()); cornerRadius = dp(10).toFloat() }
+        }
+        label(window, "▦ نافذة الموعد الرسمية (٣ أيام)", 12f, 0xFF86F2E4.toInt(), true)
+        label(window, upcoming?.let { "مهلة البصمة: ${dateText(it.dateMillis)} – ${dateText(it.dateMillis + 2 * 86_400_000L)}" } ?: "ستظهر تفاصيل المهلة بعد إضافة موعد", 12f, 0xFFFFFFFF.toInt())
+        hero.addView(window)
+        space(hero, 16)
+        button(hero, "←  تفاصيل الموعد", teal) { page = "appointments"; render() }
+        body.addView(hero, LinearLayout.LayoutParams(-1, -2))
         space(body, 18)
-        label(body, "التنبيهات القادمة", 20f, ink, true)
-        val upcomingList = all.filterNot { it.completed && it.dateMillis < System.currentTimeMillis() }
-            .filter { it.dateMillis >= startOfDay(System.currentTimeMillis()) || !it.completed }
-            .take(3)
-        if (upcomingList.isEmpty()) label(body, "لا توجد مواعيد قادمة. أضف موعدًا لتفعيل التنبيهات.", 14f, muted)
-        upcomingList.forEach { appointmentCard(body, it, showActions = true) }
+
+        // Summary and progress card.
+        card(body) {
+            val summaryHeader = LinearLayout(this@MainActivity).apply { orientation = LinearLayout.HORIZONTAL; layoutDirection = View.LAYOUT_DIRECTION_RTL; gravity = Gravity.CENTER_VERTICAL }
+            val heading = TextView(this@MainActivity).apply { text = "البصمات المنجزة  ◈"; textSize = 18f; typeface = android.graphics.Typeface.DEFAULT_BOLD; setTextColor(ink) }
+            summaryHeader.addView(heading, LinearLayout.LayoutParams(0, -2, 1f))
+            summaryHeader.addView(TextView(this@MainActivity).apply { text = "$completed من أصل ${all.size} بصمة"; textSize = 12f; setTextColor(teal); gravity = Gravity.CENTER })
+            addView(summaryHeader)
+            space(this, 12)
+            val progress = View(this@MainActivity).apply {
+                background = GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT, intArrayOf(0xFF86F2E4.toInt(), teal)).apply { cornerRadius = dp(8).toFloat() }
+            }
+            addView(progress, LinearLayout.LayoutParams(-1, dp(8)))
+            space(this, 12)
+            val stats = LinearLayout(this@MainActivity).apply { orientation = LinearLayout.HORIZONTAL; layoutDirection = View.LAYOUT_DIRECTION_RTL }
+            listOf("المتبقي" to "$remaining موعد", "التنبيه القادم" to (upcoming?.let { dateText(it.dateMillis) } ?: "غير محدد"), "النافذة الحالية" to "اليوم من ٣").forEach { pair ->
+                val tile = LinearLayout(this@MainActivity).apply {
+                    orientation = LinearLayout.VERTICAL; gravity = Gravity.CENTER
+                    setPadding(dp(4), dp(10), dp(4), dp(10))
+                    background = GradientDrawable().apply { setColor(0xFFF1F3F5.toInt()); cornerRadius = dp(10).toFloat() }
+                }
+                label(tile, pair.first, 11f, muted)
+                label(tile, pair.second, 12f, teal, true)
+                stats.addView(tile, LinearLayout.LayoutParams(0, -2, 1f).apply { marginEnd = dp(4) })
+            }
+            addView(stats)
+        }
+        space(body, 16)
+
+        val actions = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL; layoutDirection = View.LAYOUT_DIRECTION_RTL }
+        val addAction = Button(this).apply {
+            text = "⊕ إضافة موعد جديد"; isAllCaps = false; textSize = 14f; setTextColor(0xFFFFFFFF.toInt())
+            background = GradientDrawable().apply { setColor(0xFF000F1D.toInt()); cornerRadius = dp(14).toFloat() }
+            setOnClickListener { createAppointment() }
+        }
+        actions.addView(addAction, LinearLayout.LayoutParams(0, dp(54), 1.5f).apply { marginEnd = dp(8) })
+        val listAction = Button(this).apply {
+            text = "▤ المواعيد"; isAllCaps = false; textSize = 13f; setTextColor(0xFF006A61.toInt())
+            background = GradientDrawable().apply { setColor(0xFF86F2E4.toInt()); cornerRadius = dp(14).toFloat() }
+            setOnClickListener { page = "appointments"; render() }
+        }
+        actions.addView(listAction, LinearLayout.LayoutParams(0, dp(54), 1f))
+        body.addView(actions)
+        space(body, 10)
+        val shortcuts = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL; layoutDirection = View.LAYOUT_DIRECTION_RTL }
+        listOf("سجل البصمات" to "history", "التنبيهات" to "settings", "الإعدادات" to "settings").forEach { (name, target) ->
+            val shortcut = TextView(this@MainActivity).apply {
+                text = name; textSize = 11f; gravity = Gravity.CENTER
+                setTextColor(ink); setPadding(dp(8), dp(9), dp(8), dp(9))
+                background = GradientDrawable().apply { setColor(0xFFECEEF0.toInt()); cornerRadius = dp(20).toFloat() }
+                setOnClickListener { page = target; render() }
+            }
+            shortcuts.addView(shortcut, LinearLayout.LayoutParams(0, -2, 1f).apply { marginEnd = dp(4) })
+        }
+        body.addView(shortcuts)
+        space(body, 20)
+
+        val nextHeader = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL; layoutDirection = View.LAYOUT_DIRECTION_RTL; gravity = Gravity.CENTER_VERTICAL }
+        label(nextHeader, "التنبيهات القادمة  ♙", 20f, ink, true)
+        body.addView(nextHeader)
+        space(body, 10)
+        val list = all.filterNot { it.completed }.sortedBy { it.dateMillis }.take(3)
+        if (list.isEmpty()) {
+            card(body) { label(this, "لا توجد مواعيد قادمة. أضف موعدك لتفعيل التنبيهات.", 14f, muted) }
+        } else list.forEachIndexed { index, appointment ->
+            card(body) {
+                label(this, when (index) { 0 -> "تنبيه مبكر · موعد بصمة" ; 1 -> "تنبيه اليوم الأول (الرئيسي)" ; else -> "متابعة اليوم الثاني" }, 16f, ink, true)
+                label(this, dateText(appointment.dateMillis), 13f, muted)
+                label(this, when (index) { 0 -> "نوع التنبيه: قبل الموعد بيوم" ; 1 -> "رنين + اهتزاز مستمر حتى التأكيد" ; else -> "تنبيه متابعة إذا لم تتم البصمة" }, 12f, teal)
+                if (index == 0) button(this, "تأكيد إتمام البصمة", teal) { completeAppointment(appointment) }
+            }
+            space(body, 10)
+        }
+        card(body) {
+            label(this, "عند التوجه للمركز وإتمام البصمة بنجاح، اضغط على «تأكيد الإنجاز» لتحديث السجل وإيقاف التنبيهات اللاحقة.", 12f, muted)
+        }
     }
 
     private fun renderAppointments(body: LinearLayout) {
