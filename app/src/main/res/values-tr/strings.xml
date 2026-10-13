@@ -89,4 +89,36 @@
     <string name="update_install_now">Şimdi Yükle</string>
     <string name="update_later">Daha Sonra</string>
     <string name="update_permission_msg">Devam etmek için \"Bu kaynaktan uygulamalara izin ver\" seçeneğini etkinleştirmelisiniz.</string>
+
+    <string name="alarm_window_title">Kullanılabilir 3 günlük süre</string>
+    <string name="alarm_day_progress">3 günün %1. günü</string>
+    <string name="alarm_day_active">1. gün (Aktif)</string>
+    <string name="alarm_day_reminder">2. gün (Hatırlatma)</string>
+    <string name="alarm_day_last">3. gün (Son gün)</string>
+    <string name="alarm_closes_in">İlk günün bitmesine kalan süre: %1$s</string>
+    <string name="alarm_warning">Alarm sesini kapatmak randevuya katılımı onaylamaz. Parmak izi işlemini kaydetmek için (Parmak İzi Tamamlandı) düğmesine basın.</string>
+    <string name="alarm_snooze_note">Ertelenirse alarm 60 dakika sonra otomatik olarak yeniden çalar.</string>
+    <string name="alarm_confirm_success">Parmak izi işlemi onaylandı ve randevu güncellendi.</string>
+    <string name="alarm_snooze_success">Alarm 60 dakika ertelendi.</string>
+    <string name="alarm_muted_success">Hatırlatma ekranda kalırken ses kapatıldı.</string>
+
+    <string name="new_appointment_title">Yeni Parmak İzi</string>
+    <string name="new_appointment_subtitle">Parmak izi randevusunu ve hatırlatıcıları ayarlayın</string>
+    <string name="new_appointment_start_date">Başlangıç tarihi</string>
+    <string name="new_appointment_alarm_time">Alarm saati</string>
+    <string name="new_appointment_recurrence">Tekrarlama döngüsü</string>
+    <string name="new_appointment_every_28">28 günde bir</string>
+    <string name="new_appointment_recommended">Önerilen</string>
+    <string name="new_appointment_weekly">Haftalık</string>
+    <string name="new_appointment_every_7">7 günde bir</string>
+    <string name="new_appointment_count">Planlanan parmak izi sayısı</string>
+    <string name="new_appointment_sound">Alarm sesi</string>
+    <string name="new_appointment_default_sound">Varsayılan alarm sesi</string>
+    <string name="new_appointment_choose_sound">Ses seç</string>
+    <string name="new_appointment_vibration">Titreşim</string>
+    <string name="new_appointment_save">Kaydet</string>
+    <string name="new_appointment_cancel">İptal</string>
+    <string name="new_appointment_help">Kurulum talimatları</string>
+    <string name="new_appointment_help_text">İlk parmak izi tarihini ve saatini seçin, ardından tekrar döngüsünü ve planlanan parmak izi sayısını belirleyin. Alarm sesi seçebilir ve titreşimi etkinleştirebilirsiniz. Yaklaşan randevuları oluşturmak için Kaydet\'e, kaydetmeden dönmek için İptal\'e basın.</string>
+    <string name="new_appointment_saved">Randevular kaydedildi ve hatırlatıcılar planlandı</string>
 </resources>

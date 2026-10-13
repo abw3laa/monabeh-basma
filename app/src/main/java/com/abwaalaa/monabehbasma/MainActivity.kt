@@ -4,6 +4,8 @@ import android.Manifest
 import android.app.Activity
 import android.app.AlertDialog
 import android.app.DatePickerDialog
+import android.app.TimePickerDialog
+import android.media.RingtoneManager
 import android.app.DownloadManager
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -48,6 +50,12 @@ class MainActivity : Activity() {
 
     private var page = "home"
     private var isDarkMode = true
+    private var newAppointmentDateMillis = Calendar.getInstance().apply { add(Calendar.DAY_OF_YEAR, 1); set(Calendar.HOUR_OF_DAY, 10); set(Calendar.MINUTE, 0); set(Calendar.SECOND, 0); set(Calendar.MILLISECOND, 0) }.timeInMillis
+    private var newAppointmentHour = 10
+    private var newAppointmentMinute = 0
+    private var newAppointmentRecurrence = 28
+    private var newAppointmentCount = 14
+    private var newAppointmentVibration = true
 
     // Auto-update variables
     private var pendingApkFile: File? = null
@@ -177,11 +185,12 @@ class MainActivity : Activity() {
             "appointments" -> renderAppointments(body)
             "history" -> renderHistory(body)
             "settings" -> renderSettings(body)
+            "new_appointment" -> renderNewAppointment(body)
         }
 
         scroll.addView(body)
         root.addView(scroll, LinearLayout.LayoutParams(-1, 0, 1f))
-        root.addView(bottomNav())
+        if (page != "new_appointment") root.addView(bottomNav())
         setContentView(root)
     }
 
@@ -706,15 +715,185 @@ class MainActivity : Activity() {
     }
 
     private fun createAppointmentDialog() {
-        val selected = Calendar.getInstance().apply { add(Calendar.DAY_OF_YEAR, 1); set(Calendar.HOUR_OF_DAY, 10); set(Calendar.MINUTE, 0); set(Calendar.SECOND, 0) }
-        DatePickerDialog(this, { _, year, month, day ->
-            selected.set(year, month, day, 10, 0, 0)
-            val appt = Appointment(System.currentTimeMillis(), selected.timeInMillis, 28)
-            AppointmentStore.add(this, appt)
-            ReminderScheduler.schedule(this, appt)
-            toast("تم حفظ الموعد وجدولة التنبيهات بدقة")
+        val selected = Calendar.getInstance().apply { timeInMillis = newAppointmentDateMillis }
+        newAppointmentHour = selected.get(Calendar.HOUR_OF_DAY)
+        newAppointmentMinute = selected.get(Calendar.MINUTE)
+        page = "new_appointment"
+        render()
+    }
+
+    private fun renderNewAppointment(body: LinearLayout) {
+        val primaryText = if (isDarkMode) Color.WHITE else inkLight
+        val mutedText = if (isDarkMode) 0xFF94A3B8.toInt() else mutedLight
+        val cardBg = if (isDarkMode) cardDark else Color.WHITE
+        val canvas = if (isDarkMode) darkBg else canvasLight
+        val selectedBg = if (isDarkMode) 0xFF0D3B3A.toInt() else 0xFFE0F2F1.toInt()
+        val selectedStroke = if (isDarkMode) 0xFF14B8A6.toInt() else 0xFF006A61.toInt()
+        val date = Calendar.getInstance().apply { timeInMillis = newAppointmentDateMillis }
+        date.set(Calendar.HOUR_OF_DAY, newAppointmentHour)
+        date.set(Calendar.MINUTE, newAppointmentMinute)
+        val dateText = SimpleDateFormat("EEEE، d MMMM yyyy", Locale.getDefault()).format(Date(newAppointmentDateMillis))
+        val timeText = SimpleDateFormat("HH:mm", Locale.getDefault()).format(date.time)
+
+        val header = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL; gravity = Gravity.CENTER_VERTICAL }
+        val back = TextView(this).apply {
+            text = if (resources.configuration.layoutDirection == View.LAYOUT_DIRECTION_RTL) "‹" else "›"
+            textSize = 32f; gravity = Gravity.CENTER; setTextColor(primaryText)
+            setOnClickListener { page = "appointments"; render() }
+        }
+        header.addView(back, LinearLayout.LayoutParams(dp(42), dp(48)))
+        val titleColumn = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
+        titleColumn.addView(TextView(this).apply { text = getString(R.string.new_appointment_title); textSize = 21f; typeface = android.graphics.Typeface.DEFAULT_BOLD; setTextColor(primaryText) })
+        titleColumn.addView(TextView(this).apply { text = getString(R.string.new_appointment_subtitle); textSize = 12f; setTextColor(mutedText) })
+        header.addView(titleColumn, LinearLayout.LayoutParams(0, -2, 1f))
+        val help = TextView(this).apply {
+            text = "?"; textSize = 18f; gravity = Gravity.CENTER; setTextColor(if (isDarkMode) 0xFF2DD4BF.toInt() else teal)
+            background = GradientDrawable().apply { shape = GradientDrawable.OVAL; setColor(if (isDarkMode) 0x2214B8A6.toInt() else 0x220D9488.toInt()) }
+            setOnClickListener {
+                AlertDialog.Builder(this@MainActivity).setTitle(getString(R.string.new_appointment_help))
+                    .setMessage(getString(R.string.new_appointment_help_text))
+                    .setPositiveButton("حسنًا", null).show()
+            }
+        }
+        header.addView(help, LinearLayout.LayoutParams(dp(42), dp(42)))
+        body.addView(header)
+        space(body, 18)
+
+        fun selectorCard(title: String, value: String, icon: String, onClick: () -> Unit) {
+            card(body, cardBg) {
+                val row = LinearLayout(this@MainActivity).apply { orientation = LinearLayout.HORIZONTAL; gravity = Gravity.CENTER_VERTICAL }
+                val iconBox = TextView(this@MainActivity).apply {
+                    text = icon; textSize = 20f; gravity = Gravity.CENTER; setTextColor(if (isDarkMode) 0xFF2DD4BF.toInt() else teal)
+                    background = GradientDrawable().apply { cornerRadius = dp(12).toFloat(); setColor(if (isDarkMode) 0x2214B8A6.toInt() else 0x220D9488.toInt()) }
+                }
+                row.addView(iconBox, LinearLayout.LayoutParams(dp(44), dp(44)))
+                val col = LinearLayout(this@MainActivity).apply { orientation = LinearLayout.VERTICAL; setPadding(dp(12), 0, dp(12), 0) }
+                col.addView(TextView(this@MainActivity).apply { text = title; textSize = 12f; setTextColor(mutedText) })
+                col.addView(TextView(this@MainActivity).apply { text = value; textSize = 15f; typeface = android.graphics.Typeface.DEFAULT_BOLD; setTextColor(primaryText); setPadding(0, dp(4), 0, 0) })
+                row.addView(col, LinearLayout.LayoutParams(0, -2, 1f))
+                row.addView(TextView(this@MainActivity).apply { text = "›"; textSize = 24f; setTextColor(mutedText) })
+                addView(row)
+                setOnClickListener { onClick() }
+            }
+        }
+        selectorCard(getString(R.string.new_appointment_start_date), dateText, "▦") {
+            val c = Calendar.getInstance().apply { timeInMillis = newAppointmentDateMillis }
+            DatePickerDialog(this, { _, year, month, day ->
+                val updated = Calendar.getInstance().apply { timeInMillis = newAppointmentDateMillis; set(year, month, day) }
+                newAppointmentDateMillis = updated.timeInMillis
+                render()
+            }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH)).show()
+        }
+        space(body, 10)
+        selectorCard(getString(R.string.new_appointment_alarm_time), timeText, "◷") {
+            TimePickerDialog(this, { _, hour, minute ->
+                newAppointmentHour = hour
+                newAppointmentMinute = minute
+                Calendar.getInstance().apply {
+                    timeInMillis = newAppointmentDateMillis
+                    set(Calendar.HOUR_OF_DAY, hour); set(Calendar.MINUTE, minute); set(Calendar.SECOND, 0); set(Calendar.MILLISECOND, 0)
+                }.also { newAppointmentDateMillis = it.timeInMillis }
+                render()
+            }, newAppointmentHour, newAppointmentMinute, true).show()
+        }
+
+        space(body, 18)
+        body.addView(TextView(this).apply { text = getString(R.string.new_appointment_recurrence); textSize = 16f; typeface = android.graphics.Typeface.DEFAULT_BOLD; setTextColor(primaryText) })
+        space(body, 8)
+        listOf(28 to getString(R.string.new_appointment_every_28) to getString(R.string.new_appointment_recommended), 7 to getString(R.string.new_appointment_weekly) to getString(R.string.new_appointment_every_7)).forEach { option ->
+            val days = option.first.first
+            val label = option.first.second
+            val sub = option.second
+            val chosen = newAppointmentRecurrence == days
+            val optionCard = LinearLayout(this).apply {
+                orientation = LinearLayout.HORIZONTAL; gravity = Gravity.CENTER_VERTICAL
+                setPadding(dp(14), dp(13), dp(14), dp(13))
+                background = GradientDrawable().apply {
+                    cornerRadius = dp(15).toFloat()
+                    setColor(if (chosen) selectedBg else cardBg)
+                    setStroke(dp(1), if (chosen) selectedStroke else if (isDarkMode) 0xFF263646.toInt() else 0xFFC3C7CD.toInt())
+                }
+                val radio = TextView(this@MainActivity).apply { text = if (chosen) "◉" else "○"; textSize = 22f; setTextColor(if (chosen) selectedStroke else mutedText) }
+                addView(radio)
+                val col = LinearLayout(this@MainActivity).apply { orientation = LinearLayout.VERTICAL; setPadding(dp(12), 0, dp(12), 0) }
+                col.addView(TextView(this@MainActivity).apply { text = label; textSize = 14f; typeface = android.graphics.Typeface.DEFAULT_BOLD; setTextColor(primaryText) })
+                col.addView(TextView(this@MainActivity).apply { text = sub; textSize = 11f; setTextColor(mutedText) })
+                addView(col, LinearLayout.LayoutParams(0, -2, 1f))
+                setOnClickListener { newAppointmentRecurrence = days; render() }
+            }
+            body.addView(optionCard, LinearLayout.LayoutParams(-1, -2).apply { bottomMargin = dp(8) })
+        }
+
+        space(body, 8)
+        card(body, cardBg) {
+            addView(TextView(this@MainActivity).apply { text = getString(R.string.new_appointment_count); textSize = 15f; typeface = android.graphics.Typeface.DEFAULT_BOLD; setTextColor(primaryText) })
+            space(this, 10)
+            val countRow = LinearLayout(this@MainActivity).apply { orientation = LinearLayout.HORIZONTAL; gravity = Gravity.CENTER }
+            val minus = Button(this@MainActivity).apply { text = "−"; textSize = 22f; isAllCaps = false; setOnClickListener { newAppointmentCount = (newAppointmentCount - 1).coerceAtLeast(1); render() } }
+            val count = TextView(this@MainActivity).apply { text = newAppointmentCount.toString(); textSize = 28f; typeface = android.graphics.Typeface.DEFAULT_BOLD; gravity = Gravity.CENTER; setTextColor(primaryText) }
+            val plus = Button(this@MainActivity).apply { text = "+"; textSize = 22f; isAllCaps = false; setOnClickListener { newAppointmentCount = (newAppointmentCount + 1).coerceAtMost(100); render() } }
+            countRow.addView(minus, LinearLayout.LayoutParams(dp(56), dp(48)))
+            countRow.addView(count, LinearLayout.LayoutParams(0, dp(48), 1f))
+            countRow.addView(plus, LinearLayout.LayoutParams(dp(56), dp(48)))
+            addView(countRow)
+        }
+
+        space(body, 10)
+        card(body, cardBg) {
+            val soundRow = LinearLayout(this@MainActivity).apply { orientation = LinearLayout.HORIZONTAL; gravity = Gravity.CENTER_VERTICAL }
+            val soundCol = LinearLayout(this@MainActivity).apply { orientation = LinearLayout.VERTICAL }
+            soundCol.addView(TextView(this@MainActivity).apply { text = getString(R.string.new_appointment_sound); textSize = 15f; typeface = android.graphics.Typeface.DEFAULT_BOLD; setTextColor(primaryText) })
+            soundCol.addView(TextView(this@MainActivity).apply { text = getString(R.string.new_appointment_default_sound); textSize = 12f; setTextColor(mutedText); setPadding(0, dp(3), 0, 0) })
+            soundRow.addView(soundCol, LinearLayout.LayoutParams(0, -2, 1f))
+            val chooseSound = Button(this@MainActivity).apply { text = getString(R.string.new_appointment_choose_sound); isAllCaps = false; setOnClickListener {
+                val intent = Intent(RingtoneManager.ACTION_RINGTONE_PICKER).apply {
+                    putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_ALARM)
+                    putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, getString(R.string.new_appointment_choose_sound))
+                    putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI, android.net.Uri.parse(getSharedPreferences("app_settings", MODE_PRIVATE).getString("alarm_sound_uri", "") ?: "").takeIf { it.toString().isNotBlank() })
+                }
+                startActivityForResult(intent, 320)
+            } }
+            soundRow.addView(chooseSound)
+            addView(soundRow)
+            space(this, 12)
+            val vibRow = LinearLayout(this@MainActivity).apply { orientation = LinearLayout.HORIZONTAL; gravity = Gravity.CENTER_VERTICAL }
+            vibRow.addView(TextView(this@MainActivity).apply { text = getString(R.string.new_appointment_vibration); textSize = 14f; setTextColor(primaryText) }, LinearLayout.LayoutParams(0, -2, 1f))
+            val vib = android.widget.Switch(this@MainActivity).apply { isChecked = newAppointmentVibration; setOnCheckedChangeListener { _, checked -> newAppointmentVibration = checked } }
+            vibRow.addView(vib)
+            addView(vibRow)
+        }
+
+        space(body, 20)
+        button(body, getString(R.string.new_appointment_save), if (isDarkMode) 0xFF006A61.toInt() else teal, Color.WHITE) {
+            val start = Calendar.getInstance().apply {
+                timeInMillis = newAppointmentDateMillis
+                set(Calendar.HOUR_OF_DAY, newAppointmentHour); set(Calendar.MINUTE, newAppointmentMinute); set(Calendar.SECOND, 0); set(Calendar.MILLISECOND, 0)
+            }
+            repeat(newAppointmentCount) { index ->
+                val cal = Calendar.getInstance().apply { timeInMillis = start.timeInMillis; add(Calendar.DAY_OF_YEAR, index * newAppointmentRecurrence) }
+                val appt = Appointment(System.currentTimeMillis() + index, cal.timeInMillis, newAppointmentRecurrence)
+                AppointmentStore.add(this, appt)
+                ReminderScheduler.schedule(this, appt)
+            }
+            getSharedPreferences("app_settings", MODE_PRIVATE).edit().putBoolean("alarm_vibration_enabled", newAppointmentVibration).apply()
+            toast(getString(R.string.new_appointment_saved))
+            page = "appointments"
             render()
-        }, selected.get(Calendar.YEAR), selected.get(Calendar.MONTH), selected.get(Calendar.DAY_OF_MONTH)).show()
+        }
+        space(body, 8)
+        button(body, getString(R.string.new_appointment_cancel), if (isDarkMode) 0xFF172432.toInt() else Color.WHITE, primaryText) {
+            page = "appointments"
+            render()
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == 320 && resultCode == RESULT_OK) {
+            val picked = data?.getParcelableExtra<android.net.Uri>(RingtoneManager.EXTRA_RINGTONE_PICKED_URI)
+            getSharedPreferences("app_settings", MODE_PRIVATE).edit().putString("alarm_sound_uri", picked?.toString() ?: "").apply()
+            render()
+        }
     }
 
     // ==========================================
