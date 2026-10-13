@@ -89,4 +89,16 @@
     <string name="update_install_now">تثبيت الآن</string>
     <string name="update_later">لاحقاً</string>
     <string name="update_permission_msg">يجب تفعيل خيار \"السماح بتثبيت التطبيقات من هذا المصدر\" للمتابعة.</string>
+
+    <string name="alarm_window_title">نافذة الـ 3 أيام المتاحة</string>
+    <string name="alarm_day_progress">اليوم %1$d من 3</string>
+    <string name="alarm_day_active">اليوم 1 (نشط)</string>
+    <string name="alarm_day_reminder">اليوم 2 (تذكير)</string>
+    <string name="alarm_day_last">اليوم 3 (الأخير)</string>
+    <string name="alarm_closes_in">متبقي على إغلاق اليوم الأول: %1$s</string>
+    <string name="alarm_warning">تنبيه: إيقاف صوت المنبه لا يعتبر تأكيداً لحضور الموعد. لإثبات حضورك وانتقال المعاملة اضغط زر (تمت البصمة).</string>
+    <string name="alarm_snooze_note">في حال التأجيل، سيعاد تشغيل الرنين تلقائياً بعد 60 دقيقة.</string>
+    <string name="alarm_confirm_success">تم تأكيد إتمام البصمة وتحديث الموعد.</string>
+    <string name="alarm_snooze_success">تم تأجيل المنبه 60 دقيقة.</string>
+    <string name="alarm_muted_success">تم كتم الصوت مع إبقاء التذكير على الشاشة.</string>
 </resources>
