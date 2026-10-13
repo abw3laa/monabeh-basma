@@ -62,8 +62,9 @@ class MainActivity : Activity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        window.statusBarColor = navy
-        window.navigationBarColor = navy
+        window.statusBarColor = 0xFFF7F9FB.toInt()
+        window.navigationBarColor = 0xFFF7F9FB.toInt()
+        if (Build.VERSION.SDK_INT >= 23) window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR or View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR
         if (Build.VERSION.SDK_INT >= 33 && checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(arrayOf(Manifest.permission.POST_NOTIFICATIONS), 100)
         }
@@ -546,19 +547,39 @@ class MainActivity : Activity() {
         val nav = LinearLayout(this).apply {
             orientation = LinearLayout.HORIZONTAL
             layoutDirection = View.LAYOUT_DIRECTION_RTL
-            setBackgroundColor(0xFFFFFFFF.toInt())
-            setPadding(dp(4), dp(6), dp(4), dp(6))
+            setBackgroundColor(0xFFF7F9FB.toInt())
+            setPadding(dp(8), dp(7), dp(8), dp(8))
+            elevation = dp(8).toFloat()
         }
-        listOf("home" to "الرئيسية", "appointments" to "المواعيد", "history" to "السجل", "settings" to "الإعدادات").forEach { (key, title) ->
-            val b = TextView(this).apply {
-                text = (if (page == key) "●\n" else "") + title
+        val entries = listOf(
+            Triple("home", "⌂", "الرئيسية"),
+            Triple("appointments", "▣", "المواعيد"),
+            Triple("history", "◴", "السجل"),
+            Triple("settings", "⚙", "الإعدادات")
+        )
+        entries.forEach { (key, icon, title) ->
+            val item = LinearLayout(this).apply {
+                orientation = LinearLayout.VERTICAL
                 gravity = Gravity.CENTER
-                textSize = 12f
-                setTextColor(if (page == key) teal else muted)
-                setPadding(dp(3), dp(5), dp(3), dp(5))
+                setPadding(dp(2), dp(4), dp(2), dp(2))
                 setOnClickListener { page = key; render() }
             }
-            nav.addView(b, LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f))
+            val iconView = TextView(this).apply {
+                text = icon
+                textSize = 23f
+                gravity = Gravity.CENTER
+                setTextColor(if (page == key) teal else 0xFF30363B.toInt())
+            }
+            item.addView(iconView)
+            val textView = TextView(this).apply {
+                text = title
+                textSize = 11f
+                gravity = Gravity.CENTER
+                setTextColor(if (page == key) teal else ink)
+                setPadding(0, dp(2), 0, 0)
+            }
+            item.addView(textView)
+            nav.addView(item, LinearLayout.LayoutParams(0, -2, 1f))
         }
         return nav
     }
