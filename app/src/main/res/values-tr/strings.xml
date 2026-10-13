@@ -89,4 +89,16 @@
     <string name="update_install_now">Şimdi Yükle</string>
     <string name="update_later">Daha Sonra</string>
     <string name="update_permission_msg">Devam etmek için \"Bu kaynaktan uygulamalara izin ver\" seçeneğini etkinleştirmelisiniz.</string>
+
+    <string name="alarm_window_title">Kullanılabilir 3 günlük süre</string>
+    <string name="alarm_day_progress">3 günün %1. günü</string>
+    <string name="alarm_day_active">1. gün (Aktif)</string>
+    <string name="alarm_day_reminder">2. gün (Hatırlatma)</string>
+    <string name="alarm_day_last">3. gün (Son gün)</string>
+    <string name="alarm_closes_in">İlk günün bitmesine kalan süre: %1$s</string>
+    <string name="alarm_warning">Alarm sesini kapatmak randevuya katılımı onaylamaz. Parmak izi işlemini kaydetmek için (Parmak İzi Tamamlandı) düğmesine basın.</string>
+    <string name="alarm_snooze_note">Ertelenirse alarm 60 dakika sonra otomatik olarak yeniden çalar.</string>
+    <string name="alarm_confirm_success">Parmak izi işlemi onaylandı ve randevu güncellendi.</string>
+    <string name="alarm_snooze_success">Alarm 60 dakika ertelendi.</string>
+    <string name="alarm_muted_success">Hatırlatma ekranda kalırken ses kapatıldı.</string>
 </resources>
