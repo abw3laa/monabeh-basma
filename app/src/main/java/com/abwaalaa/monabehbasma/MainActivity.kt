@@ -743,15 +743,15 @@ class MainActivity : Activity() {
         }
         header.addView(back, LinearLayout.LayoutParams(dp(42), dp(48)))
         val titleColumn = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
-        titleColumn.addView(TextView(this).apply { text = "بصمة جديدة"; textSize = 21f; typeface = android.graphics.Typeface.DEFAULT_BOLD; setTextColor(primaryText) })
-        titleColumn.addView(TextView(this).apply { text = "إعداد موعد البصمة والتنبيهات"; textSize = 12f; setTextColor(mutedText) })
+        titleColumn.addView(TextView(this).apply { text = getString(R.string.new_appointment_title); textSize = 21f; typeface = android.graphics.Typeface.DEFAULT_BOLD; setTextColor(primaryText) })
+        titleColumn.addView(TextView(this).apply { text = getString(R.string.new_appointment_subtitle); textSize = 12f; setTextColor(mutedText) })
         header.addView(titleColumn, LinearLayout.LayoutParams(0, -2, 1f))
         val help = TextView(this).apply {
             text = "?"; textSize = 18f; gravity = Gravity.CENTER; setTextColor(if (isDarkMode) 0xFF2DD4BF.toInt() else teal)
             background = GradientDrawable().apply { shape = GradientDrawable.OVAL; setColor(if (isDarkMode) 0x2214B8A6.toInt() else 0x220D9488.toInt()) }
             setOnClickListener {
-                AlertDialog.Builder(this@MainActivity).setTitle("تعليمات الإعداد")
-                    .setMessage("حدد تاريخ أول بصمة ووقتها، ثم اختر دورة التكرار وعدد البصمات المجدولة. يمكنك اختيار صوت التنبيه وتفعيل الاهتزاز. اضغط حفظ لإنشاء المواعيد القادمة، أو إلغاء للعودة دون حفظ.")
+                AlertDialog.Builder(this@MainActivity).setTitle(getString(R.string.new_appointment_help))
+                    .setMessage(getString(R.string.new_appointment_help_text))
                     .setPositiveButton("حسنًا", null).show()
             }
         }
@@ -776,7 +776,7 @@ class MainActivity : Activity() {
                 setOnClickListener { onClick() }
             }
         }
-        selectorCard("تاريخ البدء", dateText, "▦") {
+        selectorCard(getString(R.string.new_appointment_start_date), dateText, "▦") {
             val c = Calendar.getInstance().apply { timeInMillis = newAppointmentDateMillis }
             DatePickerDialog(this, { _, year, month, day ->
                 val updated = Calendar.getInstance().apply { timeInMillis = newAppointmentDateMillis; set(year, month, day) }
@@ -785,7 +785,7 @@ class MainActivity : Activity() {
             }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH)).show()
         }
         space(body, 10)
-        selectorCard("وقت التنبيه", timeText, "◷") {
+        selectorCard(getString(R.string.new_appointment_alarm_time), timeText, "◷") {
             TimePickerDialog(this, { _, hour, minute ->
                 newAppointmentHour = hour
                 newAppointmentMinute = minute
@@ -798,9 +798,9 @@ class MainActivity : Activity() {
         }
 
         space(body, 18)
-        body.addView(TextView(this).apply { text = "دورة التكرار"; textSize = 16f; typeface = android.graphics.Typeface.DEFAULT_BOLD; setTextColor(primaryText) })
+        body.addView(TextView(this).apply { text = getString(R.string.new_appointment_recurrence); textSize = 16f; typeface = android.graphics.Typeface.DEFAULT_BOLD; setTextColor(primaryText) })
         space(body, 8)
-        listOf(28 to "كل 28 يوماً" to "موصى به", 7 to "أسبوعي" to "كل 7 أيام").forEach { option ->
+        listOf(28 to getString(R.string.new_appointment_every_28) to getString(R.string.new_appointment_recommended), 7 to getString(R.string.new_appointment_weekly) to getString(R.string.new_appointment_every_7)).forEach { option ->
             val days = option.first.first
             val label = option.first.second
             val sub = option.second
@@ -826,7 +826,7 @@ class MainActivity : Activity() {
 
         space(body, 8)
         card(body, cardBg) {
-            addView(TextView(this@MainActivity).apply { text = "عدد البصمات المجدولة"; textSize = 15f; typeface = android.graphics.Typeface.DEFAULT_BOLD; setTextColor(primaryText) })
+            addView(TextView(this@MainActivity).apply { text = getString(R.string.new_appointment_count); textSize = 15f; typeface = android.graphics.Typeface.DEFAULT_BOLD; setTextColor(primaryText) })
             space(this, 10)
             val countRow = LinearLayout(this@MainActivity).apply { orientation = LinearLayout.HORIZONTAL; gravity = Gravity.CENTER }
             val minus = Button(this@MainActivity).apply { text = "−"; textSize = 22f; isAllCaps = false; setOnClickListener { newAppointmentCount = (newAppointmentCount - 1).coerceAtLeast(1); render() } }
@@ -842,13 +842,13 @@ class MainActivity : Activity() {
         card(body, cardBg) {
             val soundRow = LinearLayout(this@MainActivity).apply { orientation = LinearLayout.HORIZONTAL; gravity = Gravity.CENTER_VERTICAL }
             val soundCol = LinearLayout(this@MainActivity).apply { orientation = LinearLayout.VERTICAL }
-            soundCol.addView(TextView(this@MainActivity).apply { text = "صوت التنبيه"; textSize = 15f; typeface = android.graphics.Typeface.DEFAULT_BOLD; setTextColor(primaryText) })
-            soundCol.addView(TextView(this@MainActivity).apply { text = "نغمة التنبيه الافتراضية"; textSize = 12f; setTextColor(mutedText); setPadding(0, dp(3), 0, 0) })
+            soundCol.addView(TextView(this@MainActivity).apply { text = getString(R.string.new_appointment_sound); textSize = 15f; typeface = android.graphics.Typeface.DEFAULT_BOLD; setTextColor(primaryText) })
+            soundCol.addView(TextView(this@MainActivity).apply { text = getString(R.string.new_appointment_default_sound); textSize = 12f; setTextColor(mutedText); setPadding(0, dp(3), 0, 0) })
             soundRow.addView(soundCol, LinearLayout.LayoutParams(0, -2, 1f))
-            val chooseSound = Button(this@MainActivity).apply { text = "اختر صوت"; isAllCaps = false; setOnClickListener {
+            val chooseSound = Button(this@MainActivity).apply { text = getString(R.string.new_appointment_choose_sound); isAllCaps = false; setOnClickListener {
                 val intent = Intent(RingtoneManager.ACTION_RINGTONE_PICKER).apply {
                     putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_ALARM)
-                    putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, "اختر صوت التنبيه")
+                    putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, getString(R.string.new_appointment_choose_sound))
                     putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI, android.net.Uri.parse(getSharedPreferences("app_settings", MODE_PRIVATE).getString("alarm_sound_uri", "") ?: "").takeIf { it.toString().isNotBlank() })
                 }
                 startActivityForResult(intent, 320)
@@ -857,14 +857,14 @@ class MainActivity : Activity() {
             addView(soundRow)
             space(this, 12)
             val vibRow = LinearLayout(this@MainActivity).apply { orientation = LinearLayout.HORIZONTAL; gravity = Gravity.CENTER_VERTICAL }
-            vibRow.addView(TextView(this@MainActivity).apply { text = "الاهتزاز"; textSize = 14f; setTextColor(primaryText) }, LinearLayout.LayoutParams(0, -2, 1f))
+            vibRow.addView(TextView(this@MainActivity).apply { text = getString(R.string.new_appointment_vibration); textSize = 14f; setTextColor(primaryText) }, LinearLayout.LayoutParams(0, -2, 1f))
             val vib = android.widget.Switch(this@MainActivity).apply { isChecked = newAppointmentVibration; setOnCheckedChangeListener { _, checked -> newAppointmentVibration = checked } }
             vibRow.addView(vib)
             addView(vibRow)
         }
 
         space(body, 20)
-        button(body, "حفظ", if (isDarkMode) 0xFF006A61.toInt() else teal, Color.WHITE) {
+        button(body, getString(R.string.new_appointment_save), if (isDarkMode) 0xFF006A61.toInt() else teal, Color.WHITE) {
             val start = Calendar.getInstance().apply {
                 timeInMillis = newAppointmentDateMillis
                 set(Calendar.HOUR_OF_DAY, newAppointmentHour); set(Calendar.MINUTE, newAppointmentMinute); set(Calendar.SECOND, 0); set(Calendar.MILLISECOND, 0)
@@ -876,12 +876,12 @@ class MainActivity : Activity() {
                 ReminderScheduler.schedule(this, appt)
             }
             getSharedPreferences("app_settings", MODE_PRIVATE).edit().putBoolean("alarm_vibration_enabled", newAppointmentVibration).apply()
-            toast("تم حفظ المواعيد وجدولة التنبيهات")
+            toast(getString(R.string.new_appointment_saved))
             page = "appointments"
             render()
         }
         space(body, 8)
-        button(body, "إلغاء", if (isDarkMode) 0xFF172432.toInt() else Color.WHITE, primaryText) {
+        button(body, getString(R.string.new_appointment_cancel), if (isDarkMode) 0xFF172432.toInt() else Color.WHITE, primaryText) {
             page = "appointments"
             render()
         }
