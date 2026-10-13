@@ -101,4 +101,24 @@
     <string name="alarm_confirm_success">تم تأكيد إتمام البصمة وتحديث الموعد.</string>
     <string name="alarm_snooze_success">تم تأجيل المنبه 60 دقيقة.</string>
     <string name="alarm_muted_success">تم كتم الصوت مع إبقاء التذكير على الشاشة.</string>
+
+    <string name="new_appointment_title">بصمة جديدة</string>
+    <string name="new_appointment_subtitle">إعداد موعد البصمة والتنبيهات</string>
+    <string name="new_appointment_start_date">تاريخ البدء</string>
+    <string name="new_appointment_alarm_time">وقت التنبيه</string>
+    <string name="new_appointment_recurrence">دورة التكرار</string>
+    <string name="new_appointment_every_28">كل 28 يوماً</string>
+    <string name="new_appointment_recommended">موصى به</string>
+    <string name="new_appointment_weekly">أسبوعي</string>
+    <string name="new_appointment_every_7">كل 7 أيام</string>
+    <string name="new_appointment_count">عدد البصمات المجدولة</string>
+    <string name="new_appointment_sound">صوت التنبيه</string>
+    <string name="new_appointment_default_sound">نغمة التنبيه الافتراضية</string>
+    <string name="new_appointment_choose_sound">اختر صوت</string>
+    <string name="new_appointment_vibration">الاهتزاز</string>
+    <string name="new_appointment_save">حفظ</string>
+    <string name="new_appointment_cancel">إلغاء</string>
+    <string name="new_appointment_help">تعليمات الإعداد</string>
+    <string name="new_appointment_help_text">حدد تاريخ أول بصمة ووقتها، ثم اختر دورة التكرار وعدد البصمات المجدولة. يمكنك اختيار صوت التنبيه وتفعيل الاهتزاز. اضغط حفظ لإنشاء المواعيد القادمة، أو إلغاء للعودة دون حفظ.</string>
+    <string name="new_appointment_saved">تم حفظ المواعيد وجدولة التنبيهات</string>
 </resources>
