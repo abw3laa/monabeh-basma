@@ -89,4 +89,16 @@
     <string name="update_install_now">Install Now</string>
     <string name="update_later">Later</string>
     <string name="update_permission_msg">Please grant \"Install unknown apps from this source\" to proceed.</string>
+
+    <string name="alarm_window_title">Available 3-day window</string>
+    <string name="alarm_day_progress">Day %1$d of 3</string>
+    <string name="alarm_day_active">Day 1 (Active)</string>
+    <string name="alarm_day_reminder">Day 2 (Reminder)</string>
+    <string name="alarm_day_last">Day 3 (Final)</string>
+    <string name="alarm_closes_in">Time until day one closes: %1$s</string>
+    <string name="alarm_warning">Silencing the alarm does not confirm attendance. To record your fingerprint appointment, press (Fingerprint Completed).</string>
+    <string name="alarm_snooze_note">If postponed, the alarm will ring again automatically after 60 minutes.</string>
+    <string name="alarm_confirm_success">Fingerprint completion confirmed and appointment updated.</string>
+    <string name="alarm_snooze_success">Alarm postponed for 60 minutes.</string>
+    <string name="alarm_muted_success">Sound muted while the reminder remains on screen.</string>
 </resources>
