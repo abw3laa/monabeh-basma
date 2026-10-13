@@ -67,13 +67,16 @@ class AlarmActivity : Activity() {
 
     private fun startAlarmSoundAndVibration() {
         try {
-            val uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM) ?: RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE)
+            val prefs = getSharedPreferences("app_settings", MODE_PRIVATE)
+            val savedUri = prefs.getString("alarm_sound_uri", "") ?: ""
+            val uri = if (savedUri.isNotBlank()) android.net.Uri.parse(savedUri) else
+                (RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM) ?: RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE))
             ringtone = RingtoneManager.getRingtone(applicationContext, uri)?.apply {
                 audioAttributes = AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_ALARM).setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION).build()
                 play()
             }
         } catch (_: Exception) { }
-        try {
+        if (getSharedPreferences("app_settings", MODE_PRIVATE).getBoolean("alarm_vibration_enabled", true)) try {
             vibrator = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) (getSystemService(VIBRATOR_MANAGER_SERVICE) as? VibratorManager)?.defaultVibrator else {
                 @Suppress("DEPRECATION")
                 getSystemService(VIBRATOR_SERVICE) as? Vibrator
