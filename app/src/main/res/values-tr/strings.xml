@@ -119,6 +119,6 @@
     <string name="new_appointment_save">Kaydet</string>
     <string name="new_appointment_cancel">İptal</string>
     <string name="new_appointment_help">Kurulum talimatları</string>
-    <string name="new_appointment_help_text">İlk parmak izi tarihini ve saatini seçin, ardından tekrar döngüsünü ve planlanan parmak izi sayısını belirleyin. Alarm sesi seçebilir ve titreşimi etkinleştirebilirsiniz. Yaklaşan randevuları oluşturmak için Kaydet'e, kaydetmeden dönmek için İptal'e basın.</string>
+    <string name="new_appointment_help_text">İlk parmak izi tarihini ve saatini seçin, ardından tekrar döngüsünü ve planlanan parmak izi sayısını belirleyin. Alarm sesi seçebilir ve titreşimi etkinleştirebilirsiniz. Yaklaşan randevuları oluşturmak için Kaydet\\'e, kaydetmeden dönmek için İptal\\'e basın.</string>
     <string name="new_appointment_saved">Randevular kaydedildi ve hatırlatıcılar planlandı</string>
 </resources>
