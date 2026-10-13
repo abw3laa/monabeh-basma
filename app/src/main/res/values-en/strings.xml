@@ -101,4 +101,24 @@
     <string name="alarm_confirm_success">Fingerprint completion confirmed and appointment updated.</string>
     <string name="alarm_snooze_success">Alarm postponed for 60 minutes.</string>
     <string name="alarm_muted_success">Sound muted while the reminder remains on screen.</string>
+
+    <string name="new_appointment_title">New Fingerprint</string>
+    <string name="new_appointment_subtitle">Set the fingerprint appointment and reminders</string>
+    <string name="new_appointment_start_date">Start date</string>
+    <string name="new_appointment_alarm_time">Alarm time</string>
+    <string name="new_appointment_recurrence">Repeat cycle</string>
+    <string name="new_appointment_every_28">Every 28 days</string>
+    <string name="new_appointment_recommended">Recommended</string>
+    <string name="new_appointment_weekly">Weekly</string>
+    <string name="new_appointment_every_7">Every 7 days</string>
+    <string name="new_appointment_count">Number of scheduled fingerprints</string>
+    <string name="new_appointment_sound">Alarm sound</string>
+    <string name="new_appointment_default_sound">Default alarm tone</string>
+    <string name="new_appointment_choose_sound">Choose sound</string>
+    <string name="new_appointment_vibration">Vibration</string>
+    <string name="new_appointment_save">Save</string>
+    <string name="new_appointment_cancel">Cancel</string>
+    <string name="new_appointment_help">Setup instructions</string>
+    <string name="new_appointment_help_text">Choose the first fingerprint date and time, then select the repeat cycle and number of scheduled fingerprints. You can choose an alarm sound and enable vibration. Press Save to create upcoming appointments, or Cancel to return without saving.</string>
+    <string name="new_appointment_saved">Appointments saved and reminders scheduled</string>
 </resources>
